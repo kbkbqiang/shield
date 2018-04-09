@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/shield.iml" filepath="$PROJECT_DIR$/.idea/shield.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shield-base/shield-manage-base.iml" filepath="$PROJECT_DIR$/shield-base/shield-manage-base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shield-sys-api/shield-manage-sys-api.iml" filepath="$PROJECT_DIR$/shield-sys-api/shield-manage-sys-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shield-sys-impl/shield-manage-sys-impl.iml" filepath="$PROJECT_DIR$/shield-sys-impl/shield-manage-sys-impl.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shield-web/shield-manage-web.iml" filepath="$PROJECT_DIR$/shield-web/shield-manage-web.iml" />
+    </modules>
+  </component>
+</project>

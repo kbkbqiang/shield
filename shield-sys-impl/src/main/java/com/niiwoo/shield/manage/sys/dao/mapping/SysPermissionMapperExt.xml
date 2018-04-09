@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.niiwoo.shield.manage.sys.dao.mapper.SysPermissionMapperExt">
+
+    <resultMap id="BaseResultMap"
+                type="com.niiwoo.shield.manage.sys.dao.entity.SysPermission"
+                extends="com.niiwoo.shield.manage.sys.dao.mapper.SysPermissionMapper.BaseResultMap"/>
+
+    <sql id="BaseColumnList">
+       <include refid="com.niiwoo.shield.manage.sys.dao.mapper.SysPermissionMapper.Base_Column_List"/>
+    </sql>
+
+    <insert id="insertSysPermission" parameterType="com.niiwoo.shield.manage.sys.dto.PermissionDTO" >
+        INSERT INTO tmn_sys_permission(permissionId,permissionName,permissionValue,menuId,description,status,
+            createdUser,createdTime,updatedUser,updatedTime)
+        VALUES(#{permissionId},#{permissionName}, #{permissionValue},#{menuId},#{description},#{status},
+            #{createdUser},CURRENT_TIMESTAMP,#{updatedUser},CURRENT_TIMESTAMP)
+    </insert>
+    <update id="updateSysPermission" parameterType="com.niiwoo.shield.manage.sys.dto.PermissionDTO">
+        UPDATE tmn_sys_permission
+        <set>
+            <if test="permissionName != null" >
+                permissionName = #{permissionName},
+            </if>
+            <if test="permissionValue != null" >
+                permissionValue = #{permissionValue},
+            </if>
+            <if test="description != null" >
+                description = #{description},
+            </if>
+            <if test="status != null" >
+                status = #{status},
+            </if>
+            <if test="updatedUser != null" >
+                updatedUser = #{updatedUser},
+            </if>
+            <if test="updatedTime != null" >
+                updatedTime = #{updatedTime},
+            </if>
+        </set>
+        WHERE permissionId = #{permissionId}
+    </update>
+    <delete id="deleteSysPermission">
+        DELETE
+        FROM tmn_sys_permission
+        WHERE permissionId = #{permissionId}
+    </delete>
+
+    <select id="findSysPermissionByValue" parameterType="java.lang.String" resultType="com.niiwoo.shield.manage.sys.dto.PermissionDTO">
+        SELECT <include refid="BaseColumnList" />
+        FROM tmn_sys_permission
+        WHERE permissionValue = #{permissionValue}
+    </select>
+    <select id="findSysPermissionById" resultType="com.niiwoo.shield.manage.sys.dao.entity.SysPermission">
+        SELECT
+        <include refid="BaseColumnList" />
+        FROM tmn_sys_permission
+        WHERE permissionId = #{permissionId}
+    </select>
+    <select id="findSysPermCountByCondition" resultType="java.lang.Integer">
+        SELECT count(0)
+          FROM tmn_sys_permission
+         WHERE permissionValue = #{permissionValue}
+           AND menuId = #{menuId}
+    </select>
+    <select id="queryPermissionsByMenuId" resultType="com.niiwoo.shield.manage.sys.dto.PermissionDTO">
+        SELECT
+        <include refid="BaseColumnList" />
+        FROM tmn_sys_permission
+        WHERE menuId = #{menuId}
+        ORDER BY createdTime desc
+    </select>
+
+
+    <!-- 根据userid查询用户权限列表 -->
+    <select id="queryPermissionsByUserid" resultType="java.lang.String">
+        SELECT c.permissionValue
+        FROM tmn_sys_user_role a,
+             tmn_sys_role_permission b,
+             tmn_sys_permission c
+        WHERE a.roleId = b.roleId
+              AND b.permissionId = c.permissionId
+              AND a.userId = #{userId,jdbcType=BIGINT}
+    </select>
+
+</mapper>

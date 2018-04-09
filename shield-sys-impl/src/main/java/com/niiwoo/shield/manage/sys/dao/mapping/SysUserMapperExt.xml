@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.niiwoo.shield.manage.sys.dao.mapper.SysUserMapperExt">
+
+    <resultMap id="BaseResultMap"
+                type="com.niiwoo.shield.manage.sys.dao.entity.SysUser"
+                extends="com.niiwoo.shield.manage.sys.dao.mapper.SysUserMapper.BaseResultMap"/>
+
+    <resultMap id="resMap01" type="com.niiwoo.shield.manage.sys.dto.UserDTO">
+        <id column="userId" property="userId"/>
+        <result column="userName" property="userName"/>
+        <result column="password" property="password"/>
+        <result column="realName" property="realName"/>
+        <result column="salt" property="salt"/>
+        <result column="departmentId" property="departmentId"/>
+        <result column="departmentName" property="departmentName"/>
+        <result column="userCode" property="userCode"/>
+        <result column="mobile" property="mobile"/>
+        <result column="email" property="email"/>
+        <result column="headImgUrl" property="imageFile"/>
+        <result column="status" property="status"/>
+        <result column="lockTime" property="lockTime"/>
+        <result column="createdUser" property="createdUser"/>
+        <result column="createdTime" property="createdTime"/>
+        <result column="updatedUser" property="updatedUser"/>
+        <result column="updatedTime" property="updatedTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        <include refid="com.niiwoo.shield.manage.sys.dao.mapper.SysUserMapper.Base_Column_List"/>
+    </sql>
+
+
+    <!-- 查询用户信息 -->
+    <select id="findSysUserById" parameterType="java.lang.Long" resultMap="resMap01">
+        SELECT a.userId as userId,
+                a.userName as userName,
+                a.password as password,
+                a.salt    as salt,
+                a.realName as realName,
+                a.userCode as userCode,
+                a.mobile  as mobile,
+                a.email as email,
+                a.headImgUrl as headImgUrl,
+                a.departmentId as departmentId,
+                b.departmentName as departmentName,
+                a.status as status,
+                a.createdUser as createdUser,
+                a.createdTime as createdTime,
+                a.updatedUser as updatedUser,
+                a.updatedTime as updatedTime
+        FROM tmn_sys_user a,
+              tmn_sys_department b
+        WHERE  a.departmentId = b.departmentId
+        AND a.userId = #{userId}
+    </select>
+
+
+    <!-- 查询用户信息 -->
+    <select id="queryUsersByuserIds" resultMap="resMap01">
+        SELECT a.userId as userId,
+                a.userName as userName,
+                a.password as password,
+                a.salt    as salt,
+                a.realName as realName,
+                a.userCode as userCode,
+                a.mobile  as mobile,
+                a.email as email,
+                a.headImgUrl as headImgUrl,
+                a.departmentId as departmentId,
+                b.departmentName as departmentName,
+                a.status as status,
+                a.createdUser as createdUser,
+                a.createdTime as createdTime,
+                a.updatedUser as updatedUser,
+                a.updatedTime as updatedTime
+        FROM tmn_sys_user a,
+              tmn_sys_department b
+        WHERE  a.departmentId = b.departmentId
+                AND a.userId IN
+                <foreach collection="userIds" item="userId" open="(" separator="," close=")">
+                    #{userId}
+                </foreach>
+    </select>
+
+
+    <!-- 修改用户密码 -->
+    <update id="resetPassword" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysUser">
+        UPDATE tmn_sys_user
+        SET password = #{password},
+            salt = #{salt},
+            updatedUser = #{updatedUser},
+            updatedTime = CURRENT_TIMESTAMP
+        WHERE userId = #{userId}
+    </update>
+
+
+    <!-- 通过userName查询 -->
+    <select id="findSysUserByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tmn_sys_user
+        WHERE userName = #{userName}
+    </select>
+
+
+    <!-- 通过userCode查询 -->
+    <select id="findSysUserByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tmn_sys_user
+        WHERE userCode = #{userCode}
+    </select>
+
+
+    <!-- 查询用户列表SQL碎片 -->
+    <sql id="queryUserList_fragment">
+        FROM tmn_sys_user a
+            INNER JOIN tmn_sys_department b ON a.departmentId = b.departmentId
+            LEFT JOIN tmn_sys_user_role c ON a.userId = c.userId
+        WHERE a.status != 3
+        <if test="params.realName != null and params.realName!=''">
+            AND a.realName = #{params.realName}
+        </if>
+        <if test="params.mobile != null and params.mobile!=''">
+            AND a.mobile = #{params.mobile}
+        </if>
+        <if test="params.status != null and params.status!=-1">
+            AND a.status = #{params.status}
+        </if>
+        <if test="params.departmentId != null and params.departmentId!=0">
+            AND a.departmentId = #{params.departmentId}
+        </if>
+        <if test="params.roleId != null and params.roleId!=0">
+            AND c.roleId = #{params.roleId}
+        </if>
+    </sql>
+
+    <!-- 查询总记录数 -->
+    <select id="queryUserListCount" parameterType="com.niiwoo.shield.manage.base.entity.Page" resultType="java.lang.Integer">
+        SELECT count(DISTINCT a.userId) <include refid="queryUserList_fragment"/>
+    </select>
+
+
+    <select id="queryUserList" parameterType="com.niiwoo.shield.manage.base.entity.Page" resultMap="resMap01">
+        SELECT DISTINCT
+                a.userId as userId,
+                a.userName as userName,
+                a.userCode as userCode,
+                a.realName as realName,
+                a.mobile as mobile,
+                a.email as email,
+                a.headImgUrl as headImgUrl,
+                a.departmentId as departmentId,
+                b.departmentName as departmentName,
+                a.status as status,
+                a.lockTime as lockTime,
+                a.createdTime as createdTime,
+                a.updatedTime as updatedTime
+        <include refid="queryUserList_fragment"/>
+        ORDER BY a.createdTime DESC
+        LIMIT #{offset},#{pageSize}
+    </select>
+
+
+    <!-- 更新用户最后登录IP和时间 -->
+    <select id="updateUserLoginData" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysUser">
+        UPDATE tmn_sys_user
+        <set>
+            <if test="loginIp!=null and loginIp!=''">
+                loginIp = #{loginIp},
+            </if>
+            <if test="loginTime!=null">
+                loginTime = #{loginTime},
+            </if>
+            <if test="errorTimes!=null and errorTimes!=''">
+                errorTimes = #{errorTimes},
+            </if>
+            <if test="lockTime!=null">
+                lockTime = #{lockTime},
+            </if>
+            <if test="status!=null and status!=''">
+                status = #{status},
+            </if>
+            <if test="updatedUser!=null and updatedUser!=''">
+                updatedUser = #{updatedUser},
+            </if>
+            <if test="updatedTime!=null">
+                updatedTime = #{updatedTime},
+            </if>
+        </set>
+        WHERE userName = #{userName}
+    </select>
+
+
+    <!-- 查询黑灰名单添加人列表 -->
+    <select id="queryDarkgreyAdderlist" resultMap="BaseResultMap">
+        select DISTINCT
+                u.userId, u.userName, u.password, u.realName, u.userCode, u.mobile, u.email,
+                u.headImgUrl, u.salt, u.departmentId, u.status, u.loginTime, u.loginIp, u.errorTimes,
+                u.lockTime, u.createdUser, u.createdTime, u.updatedUser, u.updatedTime
+        from tmn_sys_user u,
+            tmn_sys_user_role ur,
+            tmn_sys_role_permission rp,
+            tmn_sys_permission p
+        where u.userId = ur.userId
+                and ur.roleId = rp.roleId
+                and rp.permissionId = p.permissionId
+                AND u.status != 3
+                -- and p.permissionValue like 'darkgreylist%'
+    </select>
+    <select id="selectAllUserId" resultType="java.lang.Long">
+        select userId
+        from tmn_sys_user
+        where `status` = 0;
+    </select>
+    <select id="selectUserRealNameByUserId" parameterType="java.lang.Long"
+            resultType="com.niiwoo.shield.manage.sys.dto.user.response.SysUserNameRespDTO">
+        select userId,realName
+        from tmn_sys_user
+        WHERE userId = #{userId,jdbcType=BIGINT}
+    </select>
+
+</mapper>

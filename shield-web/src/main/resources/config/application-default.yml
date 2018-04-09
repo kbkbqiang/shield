@@ -1,0 +1,64 @@
+# note: 该配置文件仅用于开发环境
+server:
+  context-path: /shield-manage
+  port: 8080
+  undertow:
+    io-threads: 2
+    worker-threads: 5
+    accesslog:
+      enabled: true
+      pattern: "%h %l %u %{time,[dd/MMM/yyyy:HH:mm:ss.SSS Z]} \"%r\" %s %b \"%{i,Referer}\" \"%{i,User-Agent}\""
+      dir: "/var/shield-manage/access-logs/web"
+zk:
+  connections: 192.168.18.101:2181,192.168.18.102:2181,192.168.18.103:2181
+  connection-timeout-ms: 3000
+  session-timeout-ms: 5000
+  max-retries: 5
+  base-sleep-time-ms: 1000
+
+spring:
+  redis:
+    host: 192.168.18.103
+    port: 6379
+    password: ace@redis99
+    database: 9
+    timeout: 10000
+    pool:
+      max-active: 10
+      max-idle: 5
+      min-idle: 2
+      max-wait: 2000
+  http:
+    multipart:
+      max-file-size: 10Mb
+      max-request-size: 30Mb
+
+shiro:
+  enabled: true
+  render-page-mode: false
+  session:
+    prefix: "shieldsid:"
+    time-out-hours: 2
+  hashed-credential:
+    hash-algorith-name: md5
+    hash-iterations: 3
+  cache:
+    authorization-caching-enabled: true
+    authenticationCachePrefix: "shield-web-ac:" #shield-web.shiro-authentication
+    authorizationCachePrefix: "shield-web-az:"  #shield-web.shiro-authorization
+
+#base-rul上传服务地址需要修改
+file-upload:
+  application-name: ${spring.application.name}
+  base-url:
+  base-path: data\imagedata
+  image:
+    ext-names: jpg,png,gif,tif,bmp
+    max-height: 3000
+    max-width: 3000
+    max-size: 5242880
+    small-height: 100
+    small-width: 0
+  attachment:
+    ext-names: jpg,png,jpeg,doc,docx,xlsx,xls,pdf,zip,rar
+    max-size: 10485760

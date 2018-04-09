@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.niiwoo.shield.manage.sys.dao.mapper.SysMsgMapper">
+    <resultMap id="BaseResultMap" type="com.niiwoo.shield.manage.sys.dao.entity.SysMsg">
+        <id column="msgId" property="msgId" jdbcType="BIGINT"/>
+        <result column="msgTitle" property="msgTitle" jdbcType="VARCHAR"/>
+        <result column="msgType" property="msgType" jdbcType="TINYINT"/>
+        <result column="sendTime" property="sendTime" jdbcType="TIMESTAMP"/>
+        <result column="sendStatus" property="sendStatus" jdbcType="TINYINT"/>
+        <result column="deleteFlag" property="deleteFlag" jdbcType="TINYINT"/>
+        <result column="createUserId" property="createUserId" jdbcType="BIGINT"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="updateUserId" property="updateUserId" jdbcType="BIGINT"/>
+        <result column="updatedTime" property="updatedTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.niiwoo.shield.manage.sys.dao.entity.SysMsg" extends="BaseResultMap" >
+        <result column="msgContent" property="msgContent" jdbcType="LONGVARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    msgId, msgTitle, msgType,msgContent, sendTime, sendStatus, deleteFlag, createUserId, createTime, 
+    updateUserId, updatedTime
+  </sql>
+    <sql id="Blob_Column_List" >
+        msgContent
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+        select
+        <include refid="Base_Column_List" />
+        ,
+        <include refid="Blob_Column_List" />
+        from tmn_sys_msg
+        where msgId = #{msgId,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+        delete from tmn_sys_msg
+        where msgId = #{msgId,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysMsg" >
+        insert into tmn_sys_msg (msgId, msgTitle, msgType,
+        sendTime, sendStatus, deleteFlag,
+        createUserId, createTime, updateUserId,
+        updatedTime, msgContent)
+        values (#{msgId,jdbcType=BIGINT}, #{msgTitle,jdbcType=VARCHAR}, #{msgType,jdbcType=TINYINT},
+        #{sendTime,jdbcType=TIMESTAMP}, #{sendStatus,jdbcType=TINYINT}, #{deleteFlag,jdbcType=TINYINT},
+        #{createUserId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=BIGINT},
+        #{updatedTime,jdbcType=TIMESTAMP}, #{msgContent,jdbcType=LONGVARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysMsg" >
+        insert into tmn_sys_msg
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="msgId != null" >
+                msgId,
+            </if>
+            <if test="msgTitle != null" >
+                msgTitle,
+            </if>
+            <if test="msgType != null" >
+                msgType,
+            </if>
+            <if test="sendTime != null" >
+                sendTime,
+            </if>
+            <if test="sendStatus != null" >
+                sendStatus,
+            </if>
+            <if test="deleteFlag != null" >
+                deleteFlag,
+            </if>
+            <if test="createUserId != null" >
+                createUserId,
+            </if>
+            <if test="createTime != null" >
+                createTime,
+            </if>
+            <if test="updateUserId != null" >
+                updateUserId,
+            </if>
+            <if test="updatedTime != null" >
+                updatedTime,
+            </if>
+            <if test="msgContent != null" >
+                msgContent,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="msgId != null" >
+                #{msgId,jdbcType=BIGINT},
+            </if>
+            <if test="msgTitle != null" >
+                #{msgTitle,jdbcType=VARCHAR},
+            </if>
+            <if test="msgType != null" >
+                #{msgType,jdbcType=TINYINT},
+            </if>
+            <if test="sendTime != null" >
+                #{sendTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sendStatus != null" >
+                #{sendStatus,jdbcType=TINYINT},
+            </if>
+            <if test="deleteFlag != null" >
+                #{deleteFlag,jdbcType=TINYINT},
+            </if>
+            <if test="createUserId != null" >
+                #{createUserId,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUserId != null" >
+                #{updateUserId,jdbcType=BIGINT},
+            </if>
+            <if test="updatedTime != null" >
+                #{updatedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="msgContent != null" >
+                #{msgContent,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysMsg" >
+        update tmn_sys_msg
+        <set >
+            <if test="msgTitle != null" >
+                msgTitle = #{msgTitle,jdbcType=VARCHAR},
+            </if>
+            <if test="msgType != null" >
+                msgType = #{msgType,jdbcType=TINYINT},
+            </if>
+            <if test="sendTime != null" >
+                sendTime = #{sendTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sendStatus != null" >
+                sendStatus = #{sendStatus,jdbcType=TINYINT},
+            </if>
+            <if test="deleteFlag != null" >
+                deleteFlag = #{deleteFlag,jdbcType=TINYINT},
+            </if>
+            <if test="createUserId != null" >
+                createUserId = #{createUserId,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null" >
+                createTime = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUserId != null" >
+                updateUserId = #{updateUserId,jdbcType=BIGINT},
+            </if>
+            <if test="updatedTime != null" >
+                updatedTime = #{updatedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="msgContent != null" >
+                msgContent = #{msgContent,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where msgId = #{msgId,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysMsg" >
+        update tmn_sys_msg
+        set msgTitle = #{msgTitle,jdbcType=VARCHAR},
+        msgType = #{msgType,jdbcType=TINYINT},
+        sendTime = #{sendTime,jdbcType=TIMESTAMP},
+        sendStatus = #{sendStatus,jdbcType=TINYINT},
+        deleteFlag = #{deleteFlag,jdbcType=TINYINT},
+        createUserId = #{createUserId,jdbcType=BIGINT},
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+        updateUserId = #{updateUserId,jdbcType=BIGINT},
+        updatedTime = #{updatedTime,jdbcType=TIMESTAMP},
+        msgContent = #{msgContent,jdbcType=LONGVARCHAR}
+        where msgId = #{msgId,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysMsg" >
+        update tmn_sys_msg
+        set msgTitle = #{msgTitle,jdbcType=VARCHAR},
+        msgType = #{msgType,jdbcType=TINYINT},
+        sendTime = #{sendTime,jdbcType=TIMESTAMP},
+        sendStatus = #{sendStatus,jdbcType=TINYINT},
+        deleteFlag = #{deleteFlag,jdbcType=TINYINT},
+        createUserId = #{createUserId,jdbcType=BIGINT},
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+        updateUserId = #{updateUserId,jdbcType=BIGINT},
+        updatedTime = #{updatedTime,jdbcType=TIMESTAMP}
+        where msgId = #{msgId,jdbcType=BIGINT}
+    </update>
+</mapper>

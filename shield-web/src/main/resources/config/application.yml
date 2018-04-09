@@ -1,0 +1,28 @@
+# note: 该配置文件用于与环境无关的公共配置
+spring:
+  application:
+    name: "shield-manage-web"
+  profiles:
+    active: @build.profile.id@
+
+dubbo:
+  registry:
+    protocol: zookeeper
+    address: ${zk.connections}
+    group: "dubbo-${spring.profiles.active}"
+    file: "/app1/registry/${spring.application.name}"
+  protocol:
+    port: -1
+    name: dubbo
+
+# log file
+logging:
+  context-name: ${spring.application.name}
+  path: "/app1/logs/shield/${spring.application.name}"
+  rolling-policy:
+    max-file-size: 200MB
+    max-history: 500
+    total-size-cap: 100GB
+  stash:
+    destination: 192.168.18.105:2013
+    type: "shield-log-${spring.profiles.active}"

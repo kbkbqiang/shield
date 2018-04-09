@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.niiwoo.shield.manage.sys.dao.mapper.SysRolePermissionMapperExt">
+    <insert id="addRolePermission">
+        INSERT INTO tmn_sys_role_permission(id,roleId, permissionId,createdUser,createdTime,updatedUser,updatedTime)
+        VALUES(#{id},#{roleId}, #{permissionId},#{createdUser},CURRENT_TIMESTAMP,#{updatedUser},CURRENT_TIMESTAMP)
+    </insert>
+
+    <!-- 删除角色的资源权限 -->
+    <delete id="deleteRolePermissionsByRoleId" parameterType="java.lang.Long">
+        DELETE FROM tmn_sys_role_permission WHERE roleId = #{roleId}
+    </delete>
+    <delete id="deleteRolePermission">
+        DELETE FROM tmn_sys_role_permission
+        WHERE roleId = #{roleId}
+          AND permissionId = #{permissionId}
+    </delete>
+    <delete id="batchDeleteRolePermission">
+        DELETE FROM tmn_sys_role_permission
+        WHERE roleId = #{roleId}
+        AND permissionId in
+        <foreach collection="permissionIds" item="permissionId" index="index"
+                 open="(" close=")" separator=",">
+            #{permissionId}
+        </foreach>
+    </delete>
+    <select id="queryPermissionList" resultType="com.niiwoo.shield.manage.sys.dto.RolePermissionDataDTO">
+        SELECT  DISTINCT 	a.permissionId,
+        a.permissionName,
+        a.permissionValue,
+        a.description,
+        (CASE
+        WHEN b.permissionId IS NOT NULL THEN
+        1
+        ELSE
+        0
+        END) grantFlag,
+        a.createdTime
+        FROM tmn_sys_permission a
+        LEFT JOIN (SELECT permissionId FROM tmn_sys_role_permission WHERE roleId = #{roleId}) b
+        ON a.permissionId = b.permissionId
+        WHERE a.menuId = #{menuId}
+        AND a.status = 0
+        ORDER BY createdTime desc
+    </select>
+    <select id="getPermissionsByCondition" resultType="java.lang.Long">
+        SELECT 	DISTINCT a.permissionId
+        FROM tmn_sys_permission a,tmn_sys_role_permission b
+        WHERE a.permissionId = b.permissionId
+        AND a.status = 0
+        AND a.menuId = #{menuId}
+        AND b.roleId = #{roleId}
+    </select>
+    <select id="getPermissionsByUserRoles" resultType="java.lang.String">
+        SELECT 	DISTINCT a.permissionValue
+        FROM tmn_sys_permission a,tmn_sys_role_permission b
+        WHERE a.permissionId = b.permissionId
+        AND a.status = 0
+        <if test="menuId !=null ">
+            AND a.menuId = #{menuId}
+        </if>
+        AND b.roleId in
+        <foreach collection="roleIds" item="roleId" index="index"
+                 open="(" close=")" separator=",">
+            #{roleId}
+        </foreach>
+    </select>
+    <select id="queryRolePermissionCountByPermId" resultType="java.lang.Integer">
+        SELECT count(0)
+        FROM tmn_sys_role_permission
+        WHERE permissionId = #{permissionId}
+    </select>
+    <select id="queryUserIdListByPermId" resultType="java.lang.Long">
+        SELECT b.userId
+        FROM tmn_sys_role_permission a,
+             tmn_sys_user_role b
+        WHERE a.roleId = b.roleId
+          AND a.permissionId = #{permissionId}
+    </select>
+
+</mapper>

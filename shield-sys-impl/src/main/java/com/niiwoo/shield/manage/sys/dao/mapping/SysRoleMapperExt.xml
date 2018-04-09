@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.niiwoo.shield.manage.sys.dao.mapper.SysRoleMapperExt">
+
+    <resultMap id="BaseResultMap"
+                type="com.niiwoo.shield.manage.sys.dao.entity.SysRole"
+                extends="com.niiwoo.shield.manage.sys.dao.mapper.SysRoleMapper.BaseResultMap"/>
+
+    <sql id="Base_Column_List">
+        roleId, roleName, description, createdUser, createdTime, updatedUser, updatedTime
+    </sql>
+
+
+    <select id="querySysRoleByName" parameterType="java.lang.String" resultType="com.niiwoo.shield.manage.sys.dto.RoleDTO">
+        SELECT <include refid="Base_Column_List"/>
+        FROM tmn_sys_role
+        WHERE roleName = #{roleName}
+    </select>
+
+
+    <!-- 根据角色id查询用户id列表 -->
+    <select id="getUserIdsByRoleId" parameterType="java.lang.Long" resultType="java.lang.Long">
+        SELECT userId
+        FROM tmn_sys_user_role
+        WHERE roleId = #{roleId}
+    </select>
+
+
+    <select id="findSysRoleById" parameterType="java.lang.Long" resultType="com.niiwoo.shield.manage.sys.dto.RoleDTO">
+        SELECT <include refid="Base_Column_List" />
+        FROM tmn_sys_role
+        WHERE roleId = #{roleId}
+    </select>
+
+
+    <select id="queryAllRoleList" resultType="com.niiwoo.shield.manage.sys.dto.RoleDTO">
+        SELECT <include refid="Base_Column_List" />
+        FROM tmn_sys_role
+        ORDER by updatedTime DESC
+    </select>
+
+
+    <!-- 分页查询角色总记录数 -->
+    <select id="queryRoleListCount" parameterType="com.niiwoo.shield.manage.base.entity.Page" resultType="java.lang.Integer">
+        SELECT COUNT(0)
+        FROM tmn_sys_role
+        WHERE 1 = 1
+        <if test="params.roleName != null and params.roleName !=''">
+            AND roleName LIKE concat('%',#{params.roleName},'%')
+        </if>
+    </select>
+
+
+    <!-- 分页查询角色列表 -->
+    <select id="queryRoleList" parameterType="com.niiwoo.shield.manage.base.entity.Page" resultType="com.niiwoo.shield.manage.sys.dto.RoleDTO">
+        SELECT <include refid="Base_Column_List" />
+        FROM tmn_sys_role
+        WHERE 1 =1
+                <if test="params.roleName != null and params.roleName !=''">
+                    AND roleName LIKE concat('%',#{params.roleName},'%')
+                </if>
+        ORDER by updatedTime DESC
+        LIMIT #{offset},#{pageSize}
+    </select>
+
+
+    <!-- 通过userId查询角色列表 -->
+    <select id="queryRolesByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT a.roleId as roleId,
+                a.roleName as roleName
+        FROM tmn_sys_role a,
+              tmn_sys_user_role b
+        WHERE a.roleId = b.roleId AND b.userId = #{userId}
+    </select>
+
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

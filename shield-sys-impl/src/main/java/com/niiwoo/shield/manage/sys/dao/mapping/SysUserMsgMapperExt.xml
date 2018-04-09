@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.niiwoo.shield.manage.sys.dao.mapper.SysUserMsgMapperExt">
+    <resultMap id="BaseResultMap" type="com.niiwoo.shield.manage.sys.dao.entity.SysUserMsg"
+               extends="com.niiwoo.shield.manage.sys.dao.mapper.SysUserMsgMapper.BaseResultMap">
+    </resultMap>
+    <sql id="Base_Column_List">
+        <include refid="com.niiwoo.shield.manage.sys.dao.mapper.SysUserMsgMapper.Base_Column_List"></include>
+    </sql>
+    <resultMap id="SysUserMsgListResultMap" type="com.niiwoo.shield.manage.sys.dto.msg.response.SysUserMsgListRespDTO">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="msgId" property="msgId" jdbcType="BIGINT"/>
+        <result column="msgTitle" property="msgTitle" jdbcType="VARCHAR"/>
+        <result column="sendTime" property="sendTime" jdbcType="TIMESTAMP"/>
+        <result column="readStatus" property="readStatus" jdbcType="TINYINT"/>
+        <result column="realName" property="updatedName" jdbcType="VARCHAR"/>
+        <result column="hasAttach" property="hasAttach" jdbcType="BOOLEAN"/>
+    </resultMap>
+    <resultMap id="SysUserMsgDetailResultMap" type="com.niiwoo.shield.manage.sys.dto.msg.response.SysUserMsgDetailRespDTO"
+               extends="SysUserMsgListResultMap">
+        <result column="msgContent" property="msgContent" jdbcType="LONGVARCHAR"/>
+        <collection property="attachmentRespDTOList" ofType="com.niiwoo.shield.manage.sys.dto.msg.response.AttachmentRespDTO">
+            <id column="attachmentId" property="attachmentId" jdbcType="BIGINT"/>
+            <result column="attachmentName" property="attachmentName" jdbcType="VARCHAR"/>
+            <result column="attachmentPath" property="attachmentPath" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+    <update id="updateBatchByPrimaryKeySelective" parameterType="map">
+        update tmn_sys_user_msg
+        <set>
+            <if test="userMsg.userId != null">
+                userId = #{userMsg.userId,jdbcType=BIGINT},
+            </if>
+            <if test="userMsg.msgId != null">
+                msgId = #{userMsg.msgId,jdbcType=BIGINT},
+            </if>
+            <if test="userMsg.readStatus != null">
+                readStatus = #{userMsg.readStatus,jdbcType=TINYINT},
+            </if>
+            <if test="userMsg.createTime != null">
+                createTime = #{userMsg.createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="userMsg.updatedTime != null">
+                updatedTime = #{userMsg.updatedTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id IN
+        <foreach item="id" collection="idList" open="(" separator="," close=")">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+    <delete id="deleteBatchByPrimaryKey">
+        delete from tmn_sys_user_msg
+        where id IN
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+    </delete>
+    <delete id="deleteByMsgId" parameterType="java.lang.Long">
+    delete from tmn_sys_user_msg
+    where msgId = #{msgId,jdbcType=BIGINT}
+  </delete>
+    <insert id="insertBatch">
+        insert into tmn_sys_user_msg (id, userId, msgId, readStatus, createTime, updatedTime)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.msgId,jdbcType=BIGINT},
+            #{item.readStatus,jdbcType=TINYINT}, #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.updatedTime,jdbcType=TIMESTAMP})
+        </foreach>
+    </insert>
+    <select id="selectSysUserMsgPageByCondition"
+            parameterType="com.niiwoo.shield.manage.sys.dto.msg.request.SysUserMsgListReqDTO"
+            resultMap="SysUserMsgListResultMap">
+        SELECT t.id,t1.msgId,t1.msgTitle,t1.sendTime,t.readStatus,t3.realName,IF(COUNT(t2.`attachmentId`)=0,FALSE
+        ,TRUE) AS hasAttach
+        FROM tmn_sys_user_msg t
+        INNER JOIN tmn_sys_msg t1 ON t.msgId = t1.msgId and t1.deleteFlag = 0
+        LEFT JOIN tmn_sys_attachment_relation t2 ON t.msgId = t2.relationId AND t2.relationType = 1
+        LEFT JOIN tmn_sys_user t3 ON t1.updateUserId = t3.userId
+        where t.userId = #{userId,jdbcType=BIGINT} and t1.sendTime &lt;= NOW()
+        <if test="readStatus != null ">
+            and t.readStatus = #{readStatus,jdbcType=TINYINT}
+        </if>
+        GROUP BY t1.msgId,t1.msgTitle,t1.sendTime,t.readStatus,t3.realName
+        order by t1.sendTime desc
+        limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </select>
+    <select id="selectSysUserMsgDetail"
+            parameterType="com.niiwoo.shield.manage.sys.dto.msg.request.SysUserMsgDetailReqDTO"
+            resultMap="SysUserMsgDetailResultMap">
+        SELECT t.id,t1.msgId,t1.msgTitle,t1.msgContent,t1.sendTime,t.readStatus,t3.realName,IF(COUNT(t2.`attachmentId`)=0,FALSE
+        ,TRUE) AS hasAttach,t2.attachmentId,t4.attachmentName,t4.attachmentPath
+        FROM tmn_sys_user_msg t
+        INNER JOIN tmn_sys_msg t1 ON t.msgId = t1.msgId and t1.deleteFlag = 0
+        LEFT JOIN tmn_sys_attachment_relation t2 ON t.msgId = t2.relationId AND t2.relationType = 1
+        LEFT JOIN tmn_sys_user t3 ON t1.updateUserId = t3.userId
+        LEFT JOIN tmn_sys_attachment t4 ON t4.attachmentId = t2.attachmentId
+        where t.userId = #{userId,jdbcType=BIGINT} and t1.msgId = #{msgId,jdbcType=BIGINT}
+        GROUP BY t1.msgId,t1.msgTitle,t1.sendTime,t.readStatus,t3.realName,t2.attachmentId,t4.attachmentName,t4.attachmentPath
+    </select>
+    <select id="selectSysUserMsgCount" parameterType="com.niiwoo.shield.manage.sys.dto.msg.request.SysUserMsgListReqDTO"
+            resultType="java.lang.Long">
+        SELECT count(1)
+        FROM tmn_sys_user_msg t
+        INNER JOIN tmn_sys_msg t1 ON t.msgId = t1.msgId and t1.deleteFlag = 0
+        where t.userId = #{userId,jdbcType=BIGINT} and t1.sendTime &lt;= NOW()
+        <if test="readStatus != null ">
+            and t.readStatus = #{readStatus,jdbcType=TINYINT}
+        </if>
+    </select>
+</mapper>

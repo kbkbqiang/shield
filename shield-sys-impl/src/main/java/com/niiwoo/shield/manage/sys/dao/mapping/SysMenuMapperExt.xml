@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.niiwoo.shield.manage.sys.dao.mapper.SysMenuMapperExt">
+
+    <resultMap id="BaseResultMap" type="com.niiwoo.shield.manage.sys.dao.entity.SysMenu">
+        <id column="menuId" property="menuId"/>
+        <result column="menuName" property="menuName"/>
+        <result column="url" property="url"/>
+        <result column="parentId" property="parentId"/>
+        <result column="level" property="level"/>
+        <result column="sort" property="sort"/>
+        <result column="isLeaf" property="isLeaf"/>
+        <result column="createdUser" property="createdUser"/>
+        <result column="createdTime" property="createdTime"/>
+        <result column="updatedUser" property="updatedUser"/>
+        <result column="updatedTime" property="updatedTime"/>
+    </resultMap>
+
+    <sql id="BaseColumnList" >
+        menuId,menuName,url,parentId,level,sort,isLeaf,createdUser,createdTime,updatedUser,updatedTime
+    </sql>
+
+    <insert id="insertSysMenu" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysMenu">
+        INSERT INTO tmn_sys_menu(menuId,menuName,url,parentId,level,sort,isLeaf,
+        createdUser,createdTime,updatedUser,updatedTime)
+        VALUES(#{menuId},#{menuName},#{url},#{parentId},#{level},#{sort},#{isLeaf},
+        #{createdUser},CURRENT_TIMESTAMP,#{updatedUser},CURRENT_TIMESTAMP)
+    </insert>
+
+    <update id="updateSysMenu" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysMenu">
+        UPDATE tmn_sys_menu
+        SET menuName = #{menuName},
+        parentId = #{parentId},
+        url = #{url},
+        level = #{level},
+        sort = #{sort},
+        isLeaf = #{isLeaf},
+        updatedUser = #{updatedUser},
+        updatedTime = CURRENT_TIMESTAMP
+        WHERE menuId = #{menuId}
+    </update>
+
+    <select id="findSysMenuById" parameterType="java.lang.Long" resultType="com.niiwoo.shield.manage.sys.dto.MenuDTO">
+        SELECT
+        <include refid="BaseColumnList" />
+        FROM tmn_sys_menu
+        WHERE menuId = #{menuId}
+    </select>
+
+    <select id="findParentIdByMenuId" parameterType="java.lang.Long" resultType="java.lang.Long">
+        SELECT parentId
+        FROM tmn_sys_menu
+        WHERE menuId = #{menuId}
+    </select>
+
+    <select id="findChildrenByMenuId" parameterType="java.lang.Long" resultType="java.lang.Long">
+        SELECT menuId
+        FROM tmn_sys_menu
+        WHERE parentId = #{menuId}
+    </select>
+
+    <select id="selectCountByUrl" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(0)
+        FROM tmn_sys_menu
+        WHERE url = #{url}
+    </select>
+
+    <select id="queryMenuTreeTopList" parameterType="java.util.Map"
+            resultType="com.niiwoo.shield.manage.sys.dto.MenuDTO">
+        SELECT menuId,
+        menuName,
+        url,
+        parentId,
+        level,
+        isLeaf,
+        sort
+        FROM tmn_sys_menu
+        WHERE parentId = 0
+        <if test="isLeaf != null">
+            AND isLeaf = #{isLeaf}
+        </if>
+        ORDER BY sort
+    </select>
+
+    <select id="queryMenuTreeChildrenList" parameterType="java.util.Map"
+            resultType="com.niiwoo.shield.manage.sys.dto.MenuDTO">
+        SELECT menuId,
+        menuName,
+        url,
+        parentId,
+        level,
+        isLeaf,
+        sort
+        FROM tmn_sys_menu
+        WHERE parentId = #{menuId}
+        <if test="maxLevel != null">
+            AND level &lt; #{maxLevel}
+        </if>
+        <if test="isLeaf != null">
+            AND isLeaf = #{isLeaf}
+        </if>
+        ORDER BY sort
+    </select>
+
+    <select id="dropMenuByMenuIds" parameterType="java.util.Map">
+        DELETE
+        FROM tmn_sys_menu
+        WHERE menuId in
+        <foreach collection="menuIds" item="menuId" index="index"
+                 open="(" close=")" separator=",">
+            #{menuId}
+        </foreach>
+    </select>
+
+</mapper>

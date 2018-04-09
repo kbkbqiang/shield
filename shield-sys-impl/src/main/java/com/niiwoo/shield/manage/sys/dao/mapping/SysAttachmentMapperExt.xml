@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.niiwoo.shield.manage.sys.dao.mapper.SysAttachmentMapperExt">
+    <resultMap id="BaseResultMap" type="com.niiwoo.shield.manage.sys.dao.entity.SysAttachment"
+               extends="com.niiwoo.shield.manage.sys.dao.mapper.SysAttachmentMapper.BaseResultMap">
+    </resultMap>
+    <sql id="Base_Column_List">
+        <include refid="com.niiwoo.shield.manage.sys.dao.mapper.SysAttachmentMapper.Base_Column_List"></include>
+    </sql>
+    <insert id="insertBatch">
+        insert into tmn_sys_attachment (attachmentId, attachmentName, attachmentPath,
+        createUserId, createTime)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.attachmentId,jdbcType=BIGINT}, #{item.attachmentName,jdbcType=VARCHAR},
+            #{item.attachmentPath,jdbcType=VARCHAR},
+            #{item.createUserId,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP})
+        </foreach>
+    </insert>
+    <delete id="deleteBatchByPrimaryKey">
+        delete from tmn_sys_attachment
+        where attachmentId IN
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+    </delete>
+</mapper>

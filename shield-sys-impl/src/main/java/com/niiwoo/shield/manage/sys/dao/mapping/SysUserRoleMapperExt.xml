@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.niiwoo.shield.manage.sys.dao.mapper.SysUserRoleMapperExt">
+
+    <resultMap id="BaseResultMap"
+                type="com.niiwoo.shield.manage.sys.dao.entity.SysUserRole"
+                extends="com.niiwoo.shield.manage.sys.dao.mapper.SysUserRoleMapper.BaseResultMap"/>
+
+    <sql id="Base_Column_List">
+        <include refid="com.niiwoo.shield.manage.sys.dao.mapper.SysUserRoleMapper.Base_Column_List"/>
+    </sql>
+
+
+    <!-- 删除用户角色关联关系 -->
+    <delete id="deleteSysUserRole" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysUserRole">
+        DELETE FROM tmn_sys_user_role WHERE userId = #{userId} AND roleId = #{roleId}
+    </delete>
+
+
+    <!-- 根据userId 查询用户角色关联信息 -->
+    <select id="getUserRolesByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT 	userId,roleId FROM tmn_sys_user_role WHERE userId = #{userId}
+    </select>
+
+
+    <!-- 获取用户角色 -->
+    <select id="getUserRoleByParam" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysUserRole" resultMap="BaseResultMap">
+        SELECT 	userId, roleId
+        FROM tmn_sys_user_role
+        WHERE userId = #{userId} AND roleId = #{roleId}
+    </select>
+
+
+    <!-- 根据userName查询角色ids -->
+    <select id="getUserRolesByUserName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT 	a.userId as userId,
+                a.roleId as roleId
+        FROM tmn_sys_user_role a,tmn_sys_user b
+        WHERE a.userId = b.userId AND b.userName = #{userName}
+    </select>
+
+    <select id="getUserRoleByRoleName" resultType="com.niiwoo.shield.manage.sys.dto.RoleDTO">
+        select b.*
+        FROM tmn_sys_user_role a,tmn_sys_role b
+        WHERE a.roleId = b.roleId AND a.userId = #{userId} AND b.roleName = #{roleName} limit 1
+    </select>
+</mapper>

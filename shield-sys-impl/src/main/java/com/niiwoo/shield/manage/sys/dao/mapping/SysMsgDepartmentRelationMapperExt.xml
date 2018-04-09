@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.niiwoo.shield.manage.sys.dao.mapper.SysMsgDepartmentRelationMapperExt" >
+  <resultMap id="BaseResultMap" type="com.niiwoo.shield.manage.sys.dao.entity.SysMsgDepartmentRelation"
+    extends="com.niiwoo.shield.manage.sys.dao.mapper.SysMsgDepartmentRelationMapper.BaseResultMap">
+  </resultMap>
+  <sql id="Base_Column_List" >
+    <include refid="com.niiwoo.shield.manage.sys.dao.mapper.SysMsgDepartmentRelationMapper.Base_Column_List"></include>
+  </sql>
+  <insert id="insertBatch">
+    insert into tmn_sys_msg_department_relation (msgId, departmentId, createUserId,createTime)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.msgId,jdbcType=BIGINT}, #{item.departmentId,jdbcType=BIGINT},
+      #{item.createUserId,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+
+  <select id="selectSendList" resultType="com.niiwoo.shield.manage.sys.dao.entity.SysUserMsg">
+    SELECT t.msgId,t1.userId
+    FROM tmn_sys_msg_department_relation t
+    INNER JOIN tmn_sys_user t1 ON t1.departmentId = t.departmentId
+    WHERE t.msgId = #{msgId,jdbcType=BIGINT}
+    and t1.`status` = 0
+  </select>
+
+  <select id="selectDepartmentListByMsgId" resultType="java.lang.Long" parameterType="map">
+    select departmentId
+    from tmn_sys_msg_department_relation
+    where msgId = #{msgId,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteByMsgId" parameterType="map" >
+    delete from tmn_sys_msg_department_relation
+    where msgId = #{msgId,jdbcType=BIGINT}
+  </delete>
+</mapper>

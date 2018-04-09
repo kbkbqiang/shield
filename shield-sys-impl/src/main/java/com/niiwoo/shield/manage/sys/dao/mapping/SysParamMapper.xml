@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.niiwoo.shield.manage.sys.dao.mapper.SysParamMapper">
+  <resultMap id="BaseResultMap" type="com.niiwoo.shield.manage.sys.dao.entity.SysParam">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="param_type" jdbcType="CHAR" property="paramType" />
+    <result column="param_key" jdbcType="VARCHAR" property="paramKey" />
+    <result column="param_value" jdbcType="VARCHAR" property="paramValue" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+    <result column="update_manager" jdbcType="BIGINT" property="updateManager" />
+    <result column="create_manager" jdbcType="BIGINT" property="createManager" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, param_type, param_key, param_value, create_time, update_time, del_flag, update_manager, 
+    create_manager, description
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tmn_sys_param
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tmn_sys_param
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysParam">
+    insert into tmn_sys_param (id, param_type, param_key, 
+      param_value, create_time, update_time, 
+      del_flag, update_manager, create_manager, 
+      description)
+    values (#{id,jdbcType=INTEGER}, #{paramType,jdbcType=CHAR}, #{paramKey,jdbcType=VARCHAR}, 
+      #{paramValue,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{delFlag,jdbcType=CHAR}, #{updateManager,jdbcType=BIGINT}, #{createManager,jdbcType=BIGINT}, 
+      #{description,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysParam">
+    insert into tmn_sys_param
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="paramType != null">
+        param_type,
+      </if>
+      <if test="paramKey != null">
+        param_key,
+      </if>
+      <if test="paramValue != null">
+        param_value,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="delFlag != null">
+        del_flag,
+      </if>
+      <if test="updateManager != null">
+        update_manager,
+      </if>
+      <if test="createManager != null">
+        create_manager,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="paramType != null">
+        #{paramType,jdbcType=CHAR},
+      </if>
+      <if test="paramKey != null">
+        #{paramKey,jdbcType=VARCHAR},
+      </if>
+      <if test="paramValue != null">
+        #{paramValue,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null">
+        #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="updateManager != null">
+        #{updateManager,jdbcType=BIGINT},
+      </if>
+      <if test="createManager != null">
+        #{createManager,jdbcType=BIGINT},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysParam">
+    update tmn_sys_param
+    <set>
+      <if test="paramType != null">
+        param_type = #{paramType,jdbcType=CHAR},
+      </if>
+      <if test="paramKey != null">
+        param_key = #{paramKey,jdbcType=VARCHAR},
+      </if>
+      <if test="paramValue != null">
+        param_value = #{paramValue,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null">
+        del_flag = #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="updateManager != null">
+        update_manager = #{updateManager,jdbcType=BIGINT},
+      </if>
+      <if test="createManager != null">
+        create_manager = #{createManager,jdbcType=BIGINT},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysParam">
+    update tmn_sys_param
+    set param_type = #{paramType,jdbcType=CHAR},
+      param_key = #{paramKey,jdbcType=VARCHAR},
+      param_value = #{paramValue,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag,jdbcType=CHAR},
+      update_manager = #{updateManager,jdbcType=BIGINT},
+      create_manager = #{createManager,jdbcType=BIGINT},
+      description = #{description,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

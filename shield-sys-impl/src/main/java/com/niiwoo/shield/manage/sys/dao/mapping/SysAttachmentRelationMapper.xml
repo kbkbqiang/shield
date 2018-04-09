@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.niiwoo.shield.manage.sys.dao.mapper.SysAttachmentRelationMapper">
+  <resultMap id="BaseResultMap" type="com.niiwoo.shield.manage.sys.dao.entity.SysAttachmentRelation">
+    <id column="relationId" jdbcType="BIGINT" property="relationId" />
+    <id column="attachmentId" jdbcType="BIGINT" property="attachmentId" />
+    <id column="relationType" jdbcType="TINYINT" property="relationType" />
+    <result column="createUserId" jdbcType="BIGINT" property="createUserId" />
+    <result column="createTime" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    relationId, attachmentId, relationType, createUserId, createTime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tmn_sys_attachment_relation
+    where relationId = #{relationId,jdbcType=BIGINT}
+      and attachmentId = #{attachmentId,jdbcType=BIGINT}
+      and relationType = #{relationType,jdbcType=TINYINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from tmn_sys_attachment_relation
+    where relationId = #{relationId,jdbcType=BIGINT}
+      and attachmentId = #{attachmentId,jdbcType=BIGINT}
+      and relationType = #{relationType,jdbcType=TINYINT}
+  </delete>
+  <insert id="insert" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysAttachmentRelation">
+    insert into tmn_sys_attachment_relation (relationId, attachmentId, relationType, 
+      createUserId, createTime)
+    values (#{relationId,jdbcType=BIGINT}, #{attachmentId,jdbcType=BIGINT}, #{relationType,jdbcType=TINYINT}, 
+      #{createUserId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysAttachmentRelation">
+    insert into tmn_sys_attachment_relation
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="relationId != null">
+        relationId,
+      </if>
+      <if test="attachmentId != null">
+        attachmentId,
+      </if>
+      <if test="relationType != null">
+        relationType,
+      </if>
+      <if test="createUserId != null">
+        createUserId,
+      </if>
+      <if test="createTime != null">
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="relationId != null">
+        #{relationId,jdbcType=BIGINT},
+      </if>
+      <if test="attachmentId != null">
+        #{attachmentId,jdbcType=BIGINT},
+      </if>
+      <if test="relationType != null">
+        #{relationType,jdbcType=TINYINT},
+      </if>
+      <if test="createUserId != null">
+        #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysAttachmentRelation">
+    update tmn_sys_attachment_relation
+    <set>
+      <if test="createUserId != null">
+        createUserId = #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where relationId = #{relationId,jdbcType=BIGINT}
+      and attachmentId = #{attachmentId,jdbcType=BIGINT}
+      and relationType = #{relationType,jdbcType=TINYINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysAttachmentRelation">
+    update tmn_sys_attachment_relation
+    set createUserId = #{createUserId,jdbcType=BIGINT},
+      createTime = #{createTime,jdbcType=TIMESTAMP}
+    where relationId = #{relationId,jdbcType=BIGINT}
+      and attachmentId = #{attachmentId,jdbcType=BIGINT}
+      and relationType = #{relationType,jdbcType=TINYINT}
+  </update>
+</mapper>

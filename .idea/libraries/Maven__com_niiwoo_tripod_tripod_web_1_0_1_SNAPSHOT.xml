@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.niiwoo.tripod:tripod-web:1.0.1-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/niiwoo/tripod/tripod-web/1.0.1-SNAPSHOT/tripod-web-1.0.1-20180207.075952-4.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/niiwoo/tripod/tripod-web/1.0.1-SNAPSHOT/tripod-web-1.0.1-20180207.075952-4-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/niiwoo/tripod/tripod-web/1.0.1-SNAPSHOT/tripod-web-1.0.1-20180207.075952-4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

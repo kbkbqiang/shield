@@ -1,0 +1,53 @@
+#当前使用的环境
+profile: production
+
+# note: 该配置文件仅用于生产环境
+zk:
+  connections: 192.168.18.101:2181,192.168.18.102:2181,192.168.18.103:2181
+  connection-timeout-ms: 3000
+  session-timeout-ms: 5000
+  max-retries: 5
+  base-sleep-time-ms: 1000
+
+# log file
+logging:
+  stash:
+    destination: "192.168.18.63:5046"
+
+spring:
+  redis:
+    host: 192.168.18.103
+    port: 6379
+    password: ace@redis99
+    database: 9
+    timeout: 10000
+    pool:
+      max-active: 10
+      max-idle: 5
+      min-idle: 2
+      max-wait: 2000
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.18.107:3388/shield?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: niiwoowrite
+    password: niiwoo@write@123
+
+
+sharding:
+  enabled: false
+
+smsService:
+  hx:
+    normal-url: "https://dx.ipyy.net/smsJson.aspx"
+    normal-username: "AC00388"
+    normal-password: "nwjr888"
+    sem-url: "https://dx.ipyy.net/smsJson.aspx"
+    sem-username: "AC00388"
+    sem-password: "nwjr888"
+  mw:
+    normal-url: "http://61.145.229.26:8086/MWGate/wmgw.asmx/MongateSendSubmit"
+    normal-username: "js2236"
+    normal-password: "856278"
+    sem-url: "http://61.145.229.26:8086/MWGate/wmgw.asmx/MongateSendSubmit"
+    sem-username: "js2236"
+    sem-password: "856278"

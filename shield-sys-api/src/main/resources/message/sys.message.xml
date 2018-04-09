@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+    <entry key="MS_100001">{0}不能为空</entry>
+    <entry key="MS_100002">该{0}不存在</entry>
+    <entry key="MS_100003">该{0}已存在</entry>
+    <entry key="MS_100004">该{0}无效</entry>
+    <entry key="MS_100005">操作失败{0}</entry>
+    <entry key="MS_100006">{0}错误</entry>
+    <entry key="MS_100007">{0}已停用</entry>
+    <entry key="MS_100008">请联系管理员解锁账号{0}</entry>
+    <entry key="MS_100009">{0},不能删除</entry>
+    <entry key="MS_100010">{0}不能相同</entry>
+    <entry key="MS_100011">用户角色授权失败{0}</entry>
+    <entry key="MS_100012">删除用户角色权限失败{0}</entry>
+    <entry key="MS_100013">发送验证码失败</entry>
+    <entry key="MS_100014">{}级部门不能作为上级部门</entry>
+    <entry key="MS_100015">{}级菜单不能作为上级菜单</entry>
+    <entry key="MS_100016">子栏目不能作为上级菜单</entry>
+
+    <entry key="MS_200001">发送验证码失败</entry>
+
+</properties>

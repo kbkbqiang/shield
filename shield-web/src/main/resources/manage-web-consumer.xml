@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <dubbo:application name="${spring.application.name}" logger="slf4j"/>
+
+    <dubbo:registry protocol="${dubbo.registry.protocol}" address="${zk.connections}" file="${dubbo.registry.file}" group="${dubbo.registry.group}"/>
+
+    <dubbo:annotation package="com.niiwoo.shield.manage.web"/>
+
+    <dubbo:consumer lazy="true" check="false" retries="0" filter="default,clientTrace"/>
+
+</beans>

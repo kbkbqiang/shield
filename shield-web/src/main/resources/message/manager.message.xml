@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <!-- 参数错误 -->
+    <entry key="SYS10001">{0}</entry>
+
+
+    <entry key="US_200001">上传用户头像失败</entry>
+    <entry key="US_200002">图片格式有误</entry>
+    <entry key="US_200003">用户头像数据有误</entry>
+    <entry key="US_200004">用户角色授权失败</entry>
+    <entry key="US_200005">角色不存在</entry>
+    <entry key="US_200006">角色不能为空</entry>
+    <entry key="US_200007">用户不存在</entry>
+    <entry key="US_200008">用户编号已存在</entry>
+    <entry key="US_200009">用户角色授权失败</entry>
+    <entry key="US_200010">不能为空</entry>
+    <entry key="US_200011">新密码与旧密码不能相同</entry>
+    <entry key="US_200012">旧密码输入错误</entry>
+    <entry key="US_200013">删除用户角色权限失败</entry>
+    <entry key="US_200014">根据ID根据查询用户信息操作失败</entry>
+    <entry key="US_200015">分页查询用户列表，精准匹配操作失败</entry>
+    <entry key="US_200016">查询当前登录用户的菜单列表操作失败</entry>
+    <entry key="US_200017">菜单ID不能为空</entry>
+    <entry key="US_200018">查询当前登录用户的按钮权限列表操作失败</entry>
+
+
+    <!-- 上传和下载附件相关 -->
+    <entry key="US_300001">上传附件异常</entry>
+    <entry key="US_300002">下载附件异常</entry>
+
+</properties>

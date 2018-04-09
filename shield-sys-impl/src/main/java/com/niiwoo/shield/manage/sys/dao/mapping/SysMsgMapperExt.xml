@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.niiwoo.shield.manage.sys.dao.mapper.SysMsgMapperExt">
+    <resultMap id="SysMsgListResultMap" type="com.niiwoo.shield.manage.sys.dto.msg.response.SysMsgListRespDTO">
+        <id column="msgId" property="msgId" jdbcType="BIGINT"/>
+        <result column="msgTitle" property="msgTitle" jdbcType="VARCHAR"/>
+        <result column="sendTime" property="sendTime" jdbcType="TIMESTAMP"/>
+        <result column="updatedTime" property="updatedTime" jdbcType="TIMESTAMP"/>
+        <result column="realName" property="updatedName" jdbcType="VARCHAR"/>
+        <result column="hasAttach" property="hasAttach" jdbcType="BOOLEAN"/>
+    </resultMap>
+    <resultMap id="SysMsgDetailResultMap" type="com.niiwoo.shield.manage.sys.dto.msg.response.SysMsgDetailRespDTO"
+               extends="SysMsgListResultMap">
+        <result column="msgContent" property="msgContent" jdbcType="LONGVARCHAR"/>
+        <collection property="attachmentRespDTOList" ofType="com.niiwoo.shield.manage.sys.dto.msg.response.AttachmentRespDTO">
+            <id column="attachmentId" property="attachmentId" jdbcType="BIGINT"/>
+            <result column="attachmentName" property="attachmentName" jdbcType="VARCHAR"/>
+            <result column="attachmentPath" property="attachmentPath" jdbcType="VARCHAR"/>
+        </collection>
+        <collection property="departmentIdList" ofType="java.lang.Long">
+            <id column="departmentId" property="departmentId" jdbcType="BIGINT"/>
+        </collection>
+    </resultMap>
+    <sql id="queryCondition">
+        <if test="msgTitle != null and msgTitle != ''">
+            and t.msgTitle LIKE concat(concat('%',#{msgTitle,jdbcType=VARCHAR}),'%')
+        </if>
+        <if test="sendStartTime != null">
+            and <![CDATA[ t.updatedTime >= #{sendStartTime,jdbcType=TIMESTAMP} ]]>
+        </if>
+        <if test="sendEndTime != null">
+            and <![CDATA[ t.updatedTime <= #{sendEndTime,jdbcType=TIMESTAMP} ]]>
+        </if>
+    </sql>
+    <select id="selectSysMsgPageByCondition" parameterType="com.niiwoo.shield.manage.sys.dto.msg.request.SysMsgListReqDTO"
+            resultMap="SysMsgListResultMap">
+        SELECT
+        t.msgId,t.msgTitle,t.sendTime,t.updatedTime,t1.realName,IF(COUNT(t2.`attachmentId`)=0,FALSE
+        ,TRUE) AS hasAttach
+        FROM tmn_sys_msg t
+        LEFT JOIN tmn_sys_user t1 ON t.updateUserId = t1.userId
+        LEFT JOIN tmn_sys_attachment_relation t2 ON t.msgId = t2.relationId AND t2.relationType = 1
+        where t.deleteFlag = 0
+        <include refid="queryCondition"/>
+        GROUP BY t.msgId,t.msgTitle,t.sendTime,t.updatedTime,t1.realName
+        order by t.sendStatus asc, t.updatedTime desc
+        limit #{offset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectSysMsgDetailByPrimaryKey" parameterType="java.lang.Long"
+            resultMap="SysMsgDetailResultMap">
+        SELECT
+        t.msgId,t.msgTitle,t.msgContent,t.sendTime,t.updatedTime,t1.realName,IF(COUNT(t2.`attachmentId`)=0,FALSE
+        ,TRUE) AS hasAttach,t2.attachmentId,t3.attachmentName,t3.attachmentPath,t4.departmentId
+        FROM tmn_sys_msg t
+        LEFT JOIN tmn_sys_user t1 ON t.updateUserId = t1.userId
+        LEFT JOIN tmn_sys_attachment_relation t2 ON t.msgId = t2.relationId AND t2.relationType = 1
+        LEFT JOIN tmn_sys_attachment t3 ON t3.attachmentId = t2.attachmentId
+        LEFT JOIN tmn_sys_msg_department_relation t4 ON t4.msgId = t.msgId
+        where t.msgId = #{msgId,jdbcType=BIGINT}
+        GROUP BY t.msgId,t.msgTitle,t.msgContent,t.sendTime,t.updatedTime,t1.realName,t2.attachmentId,t3.attachmentName,t3.attachmentPath,t4.departmentId
+    </select>
+
+    <select id="selectSysMsgCount" parameterType="com.niiwoo.shield.manage.sys.dto.msg.request.SysMsgListReqDTO"
+            resultType="java.lang.Long">
+        select count(1)
+        from tmn_sys_msg t
+        where t.deleteFlag = 0
+        <include refid="queryCondition"/>
+    </select>
+    <update id="updateBatchByPrimaryKeySelective" parameterType="map">
+        update tmn_sys_msg
+        <set>
+            <if test="msg.msgTitle != null">
+                msgTitle = #{msg.msgTitle,jdbcType=VARCHAR},
+            </if>
+            <if test="msg.msgType != null">
+                msgType = #{msg.msgType,jdbcType=TINYINT},
+            </if>
+            <if test="msg.sendTime != null">
+                sendTime = #{msg.sendTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="msg.sendStatus != null">
+                sendStatus = #{msg.sendStatus,jdbcType=TINYINT},
+            </if>
+            <if test="msg.deleteFlag != null">
+                deleteFlag = #{msg.deleteFlag,jdbcType=TINYINT},
+            </if>
+            <if test="msg.createUserId != null">
+                createUserId = #{msg.createUserId,jdbcType=BIGINT},
+            </if>
+            <if test="msg.createTime != null">
+                createTime = #{msg.createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="msg.updateUserId != null">
+                updateUserId = #{msg.updateUserId,jdbcType=BIGINT},
+            </if>
+            <if test="msg.updatedTime != null">
+                updatedTime = #{msg.updatedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="msg.msgContent != null">
+                msgContent = #{msg.msgContent,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where msgId IN
+        <foreach item="id" collection="msgIdList" open="(" separator="," close=")">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+</mapper>

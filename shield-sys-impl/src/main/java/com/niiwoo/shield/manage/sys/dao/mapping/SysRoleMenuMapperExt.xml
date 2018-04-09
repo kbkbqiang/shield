@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.niiwoo.shield.manage.sys.dao.mapper.SysRoleMenuMapperExt">
+    <insert id="addRoleMenu">
+        INSERT INTO tmn_sys_role_menu(id,roleId, menuId,createdUser,createdTime,updatedUser,updatedTime)
+        VALUES(#{id},#{roleId}, #{menuId},#{createdUser},CURRENT_TIMESTAMP,#{updatedUser},CURRENT_TIMESTAMP)
+    </insert>
+
+
+    <!-- 删除角色的菜单权限 -->
+    <delete id="deleteRoleMenusByRoleId" parameterType="java.lang.Long">
+        DELETE FROM tmn_sys_role_menu WHERE roleId = #{roleId}
+    </delete>
+    <delete id="deleteRoleMenu">
+        DELETE FROM tmn_sys_role_menu
+        WHERE roleId = #{roleId}
+        AND menuId = #{menuId}
+    </delete>
+    <delete id="deleteRoleMenuByMenuIds">
+        DELETE FROM tmn_sys_role_menu
+        WHERE menuId in
+        <foreach collection="menuIds" item="menuId" index="index"
+                 open="(" close=")" separator=",">
+            #{menuId}
+        </foreach>
+    </delete>
+    <select id="queryMenuIdsByRoleId" resultType="java.lang.Long">
+         SELECT 	menuId
+        FROM tmn_sys_role_menu
+        WHERE roleId = #{roleId}
+    </select>
+    <select id="queryMenuTreeTopList" resultType="com.niiwoo.shield.manage.sys.dto.RoleMenuDataDTO">
+        SELECT 	a.menuId,
+        a.menuName,
+        a.url,
+        a.parentId,
+        a.isLeaf,
+        a.sort,
+        (CASE
+        WHEN b.menuId IS NOT NULL THEN
+        1
+        ELSE
+        0
+        END) grantFlag
+        FROM tmn_sys_menu a
+        LEFT JOIN (SELECT menuId FROM tmn_sys_role_menu WHERE roleId = #{roleId}) b
+        ON a.menuId = b.menuId
+        WHERE a.parentId = 0
+        ORDER BY a.sort
+    </select>
+    <select id="queryMenuTreeChildrenList" parameterType="java.util.Map"
+            resultType="com.niiwoo.shield.manage.sys.dto.RoleMenuDataDTO">
+        SELECT 	a.menuId,
+        a.menuName,
+        a.url,
+        a.parentId,
+        a.isLeaf,
+        a.sort,
+        (CASE
+        WHEN b.menuId IS NOT NULL THEN
+        1
+        ELSE
+        0
+        END) grantFlag
+        FROM tmn_sys_menu a
+        LEFT JOIN (SELECT menuId FROM tmn_sys_role_menu WHERE roleId = #{roleId}) b
+        ON a.menuId = b.menuId
+        WHERE a.parentId = #{menuId}
+        ORDER BY a.sort
+    </select>
+    <select id="queryMenuTreeTopListByRoles" resultType="com.niiwoo.shield.manage.sys.dto.RoleMenuDataDTO">
+        SELECT 	DISTINCT 	a.menuId,
+        a.menuName,
+        a.url,
+        a.parentId,
+        a.isLeaf,
+        a.sort
+        FROM tmn_sys_menu a,tmn_sys_role_menu b
+        WHERE a.menuId = b.menuId
+        AND a.parentId = 0
+        <if test="roleIds != null">
+            AND b.roleId in
+            <foreach collection="roleIds" item="roleId" index="index"
+                     open="(" close=")" separator=",">
+                #{roleId}
+            </foreach>
+        </if>
+        ORDER BY a.sort
+    </select>
+    <select id="queryMenuTreeChildrenListByRoles"
+            resultType="com.niiwoo.shield.manage.sys.dto.RoleMenuDataDTO">
+        SELECT 	DISTINCT a.menuId,
+        a.menuName,
+        a.url,
+        a.parentId,
+        a.isLeaf,
+        a.sort
+        FROM tmn_sys_menu a,tmn_sys_role_menu b
+        WHERE a.menuId = b.menuId
+        AND a.parentId = #{menuId}
+        <if test="roleIds != null">
+            AND b.roleId in
+            <foreach collection="roleIds" item="roleId" index="index"
+                     open="(" close=")" separator=",">
+                #{roleId}
+            </foreach>
+        </if>
+        ORDER BY a.sort
+    </select>
+
+</mapper>

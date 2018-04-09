@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.niiwoo.shield.manage.sys.dao.mapper.SysAttachmentMapper">
+    <resultMap id="BaseResultMap" type="com.niiwoo.shield.manage.sys.dao.entity.SysAttachment">
+        <id column="attachmentId" jdbcType="BIGINT" property="attachmentId"/>
+        <result column="attachmentName" jdbcType="VARCHAR" property="attachmentName"/>
+        <result column="attachmentPath" jdbcType="VARCHAR" property="attachmentPath"/>
+        <result column="createUserId" jdbcType="BIGINT" property="createUserId"/>
+        <result column="createTime" jdbcType="TIMESTAMP" property="createTime"/>
+
+    </resultMap>
+    <sql id="Base_Column_List">
+    attachmentId, attachmentName, attachmentPath, createUserId, createTime
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tmn_sys_attachment
+        where attachmentId = #{attachmentId,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tmn_sys_attachment
+    where attachmentId = #{attachmentId,jdbcType=BIGINT}
+  </delete>
+    <insert id="insert" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysAttachment">
+    insert into tmn_sys_attachment (attachmentId, attachmentName, attachmentPath, 
+      createUserId, createTime)
+    values (#{attachmentId,jdbcType=BIGINT}, #{attachmentName,jdbcType=VARCHAR}, #{attachmentPath,jdbcType=VARCHAR}, 
+      #{createUserId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+    <insert id="insertSelective" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysAttachment">
+        insert into tmn_sys_attachment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="attachmentId != null">
+                attachmentId,
+            </if>
+            <if test="attachmentName != null">
+                attachmentName,
+            </if>
+            <if test="attachmentPath != null">
+                attachmentPath,
+            </if>
+            <if test="createUserId != null">
+                createUserId,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="attachmentId != null">
+                #{attachmentId,jdbcType=BIGINT},
+            </if>
+            <if test="attachmentName != null">
+                #{attachmentName,jdbcType=VARCHAR},
+            </if>
+            <if test="attachmentPath != null">
+                #{attachmentPath,jdbcType=VARCHAR},
+            </if>
+            <if test="createUserId != null">
+                #{createUserId,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysAttachment">
+        update tmn_sys_attachment
+        <set>
+            <if test="attachmentName != null">
+                attachmentName = #{attachmentName,jdbcType=VARCHAR},
+            </if>
+            <if test="attachmentPath != null">
+                attachmentPath = #{attachmentPath,jdbcType=VARCHAR},
+            </if>
+            <if test="createUserId != null">
+                createUserId = #{createUserId,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where attachmentId = #{attachmentId,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysAttachment">
+    update tmn_sys_attachment
+    set attachmentName = #{attachmentName,jdbcType=VARCHAR},
+      attachmentPath = #{attachmentPath,jdbcType=VARCHAR},
+      createUserId = #{createUserId,jdbcType=BIGINT},
+      createTime = #{createTime,jdbcType=TIMESTAMP}
+    where attachmentId = #{attachmentId,jdbcType=BIGINT}
+  </update>
+</mapper>

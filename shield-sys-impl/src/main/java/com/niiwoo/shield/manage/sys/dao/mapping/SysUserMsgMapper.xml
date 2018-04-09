@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.niiwoo.shield.manage.sys.dao.mapper.SysUserMsgMapper">
+  <resultMap id="BaseResultMap" type="com.niiwoo.shield.manage.sys.dao.entity.SysUserMsg">
+    <id column="id" property="id" jdbcType="BIGINT"/>
+    <result column="userId" property="userId" jdbcType="BIGINT"/>
+    <result column="msgId" property="msgId" jdbcType="BIGINT"/>
+    <result column="readStatus" property="readStatus" jdbcType="TINYINT"/>
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+    <result column="updatedTime" property="updatedTime" jdbcType="TIMESTAMP"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, userId, msgId, readStatus, createTime, updatedTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select
+    <include refid="Base_Column_List"/>
+    from tmn_sys_user_msg
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tmn_sys_user_msg
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysUserMsg">
+    insert into tmn_sys_user_msg (id, userId, msgId,
+    readStatus, createTime, updatedTime
+    )
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{msgId,jdbcType=BIGINT},
+    #{readStatus,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{updatedTime,jdbcType=TIMESTAMP}
+    )
+  </insert>
+  <insert id="insertSelective" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysUserMsg">
+    insert into tmn_sys_user_msg
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        userId,
+      </if>
+      <if test="msgId != null">
+        msgId,
+      </if>
+      <if test="readStatus != null">
+        readStatus,
+      </if>
+      <if test="createTime != null">
+        createTime,
+      </if>
+      <if test="updatedTime != null">
+        updatedTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="msgId != null">
+        #{msgId,jdbcType=BIGINT},
+      </if>
+      <if test="readStatus != null">
+        #{readStatus,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedTime != null">
+        #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysUserMsg">
+    update tmn_sys_user_msg
+    <set>
+      <if test="userId != null">
+        userId = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="msgId != null">
+        msgId = #{msgId,jdbcType=BIGINT},
+      </if>
+      <if test="readStatus != null">
+        readStatus = #{readStatus,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedTime != null">
+        updatedTime = #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysUserMsg">
+    update tmn_sys_user_msg
+    set readStatus = #{readStatus,jdbcType=TINYINT},
+    updatedTime = #{updatedTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

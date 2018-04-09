@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$/shield-base" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/shield-sys-api" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/shield-sys-impl" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/shield-web" vcs="Git" />
+  </component>
+</project>

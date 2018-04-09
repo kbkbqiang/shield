@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.niiwoo.shield.manage.sys.dao.mapper.SysSmsTemplateMapperExt">
+    <resultMap id="BaseResultMap" type="com.niiwoo.shield.manage.sys.dao.entity.SysSmsTemplate"
+               extends="com.niiwoo.shield.manage.sys.dao.mapper.SysSmsTemplateMapper.BaseResultMap"/>
+    <sql id="Base_Column_List">
+        <include refid="com.niiwoo.shield.manage.sys.dao.mapper.SysSmsTemplateMapper.Base_Column_List"/>
+    </sql>
+    <!-- 根据 templateKey 查询模板 -->
+    <select id="selectByTemplateCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tmn_sys_sms_template
+        where template_code = #{templateCode,jdbcType=VARCHAR}
+    </select>
+</mapper>

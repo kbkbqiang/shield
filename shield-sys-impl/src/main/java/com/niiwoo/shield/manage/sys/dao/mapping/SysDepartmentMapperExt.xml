@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.niiwoo.shield.manage.sys.dao.mapper.SysDepartmentMapperExt">
+
+    <resultMap id="BaseResultMap"
+                type="com.niiwoo.shield.manage.sys.dao.entity.SysDepartment"
+                extends="com.niiwoo.shield.manage.sys.dao.mapper.SysDepartmentMapper.BaseResultMap"/>
+
+    <sql id="Base_Column_List">
+        <include refid="com.niiwoo.shield.manage.sys.dao.mapper.SysDepartmentMapper.Base_Column_List"/>
+    </sql>
+
+
+    <!-- 根据部门编号查询部门 -->
+    <select id="findSysDepartmentByCode" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tmn_sys_department
+        WHERE departmentCode = #{departmentCode,jdbcType=VARCHAR}
+    </select>
+
+
+    <!-- 根据部门id批量删除 -->
+    <delete id="deleteSysDepartmentByIds" parameterType="java.util.Map">
+        DELETE
+        FROM tmn_sys_department
+        WHERE departmentId IN
+                <foreach collection="departmentIds" item="departmentId" index="index"
+                         open="(" close=")" separator=",">
+                    #{departmentId}
+                </foreach>
+    </delete>
+
+
+    <!-- 统计部门用户数 -->
+    <select id="queryUserCountByDepartmentIds" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(0)
+        FROM tmn_sys_user
+            <![CDATA[ WHERE status <> 3 ]]>
+            AND departmentId IN
+                <foreach collection="departmentIds" item="departmentId" index="index" open="(" close=")" separator=",">
+                    #{departmentId}
+                </foreach>
+    </select>
+
+
+    <!-- 顶级节点查询 -->
+    <select id="queryDeptTreeTopList" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tmn_sys_department
+        WHERE parentId = 0
+        ORDER BY sort
+    </select>
+
+
+    <!-- 子菜单列表，树结构 -->
+    <select id="queryDeptTreeChildrenList" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM tmn_sys_department
+        WHERE parentId = #{departmentId}
+            <if test="maxLevel != null">
+                AND level &lt; #{maxLevel}
+            </if>
+        ORDER BY sort
+    </select>
+
+</mapper>

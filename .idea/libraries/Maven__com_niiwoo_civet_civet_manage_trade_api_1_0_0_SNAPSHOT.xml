@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.niiwoo.civet:civet-manage-trade-api:1.0.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/niiwoo/civet/civet-manage-trade-api/1.0.0-SNAPSHOT/civet-manage-trade-api-1.0.0-20180208.031113-10.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/niiwoo/civet/civet-manage-trade-api/1.0.0-SNAPSHOT/civet-manage-trade-api-1.0.0-20180208.031113-10-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/niiwoo/civet/civet-manage-trade-api/1.0.0-SNAPSHOT/civet-manage-trade-api-1.0.0-20180208.031113-10-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

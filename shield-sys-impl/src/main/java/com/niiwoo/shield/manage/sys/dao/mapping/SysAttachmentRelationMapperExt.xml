@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.niiwoo.shield.manage.sys.dao.mapper.SysAttachmentRelationMapperExt">
+    <resultMap id="BaseResultMap" type="com.niiwoo.shield.manage.sys.dao.entity.SysAttachmentRelation"
+               extends="com.niiwoo.shield.manage.sys.dao.mapper.SysAttachmentRelationMapper.BaseResultMap">
+    </resultMap>
+    <sql id="Base_Column_List">
+        <include refid="com.niiwoo.shield.manage.sys.dao.mapper.SysAttachmentRelationMapper.Base_Column_List"></include>
+    </sql>
+    <insert id="insertBatch">
+        insert into tmn_sys_attachment_relation (relationId, relationType, attachmentId, createUserId, createTime)
+        values
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.relationId,jdbcType=BIGINT}, #{item.relationType,jdbcType=TINYINT}, #{item.attachmentId,jdbcType=BIGINT},
+            #{item.createUserId,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP})
+        </foreach>
+    </insert>
+
+    <delete id="deleteByMsgId" parameterType="map" >
+        delete from tmn_sys_attachment_relation
+        where relationId = #{relationId,jdbcType=BIGINT}
+        and relationType = #{relationType,jdbcType=TINYINT}
+    </delete>
+
+    <select id="selectAttachListByMsgId" resultType="com.niiwoo.shield.manage.sys.dao.entity.SysAttachment" parameterType="map" >
+        select t.attachmentId, t1.attachmentName, t1.attachmentPath
+        from tmn_sys_attachment_relation t
+        INNER JOIN tmn_sys_attachment t1 on t.attachmentId = t1.attachmentId
+        where t.relationId = #{relationId,jdbcType=BIGINT}
+        and t.relationType = #{relationType,jdbcType=TINYINT}
+    </select>
+</mapper>

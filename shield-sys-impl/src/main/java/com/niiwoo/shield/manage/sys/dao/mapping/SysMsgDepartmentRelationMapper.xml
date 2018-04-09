@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.niiwoo.shield.manage.sys.dao.mapper.SysMsgDepartmentRelationMapper" >
+  <resultMap id="BaseResultMap" type="com.niiwoo.shield.manage.sys.dao.entity.SysMsgDepartmentRelation" >
+    <id column="msgId" property="msgId" jdbcType="BIGINT" />
+    <id column="departmentId" property="departmentId" jdbcType="BIGINT" />
+    <result column="createUserId" property="createUserId" jdbcType="BIGINT" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    msgId, departmentId, createUserId, createTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="map" >
+    select 
+    <include refid="Base_Column_List" />
+    from tmn_sys_msg_department_relation
+    where msgId = #{msgId,jdbcType=BIGINT}
+      and departmentId = #{departmentId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="map" >
+    delete from tmn_sys_msg_department_relation
+    where msgId = #{msgId,jdbcType=BIGINT}
+      and departmentId = #{departmentId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysMsgDepartmentRelation" >
+    insert into tmn_sys_msg_department_relation (msgId, departmentId, createUserId, 
+      createTime)
+    values (#{msgId,jdbcType=BIGINT}, #{departmentId,jdbcType=BIGINT}, #{createUserId,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysMsgDepartmentRelation" >
+    insert into tmn_sys_msg_department_relation
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="msgId != null" >
+        msgId,
+      </if>
+      <if test="departmentId != null" >
+        departmentId,
+      </if>
+      <if test="createUserId != null" >
+        createUserId,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="msgId != null" >
+        #{msgId,jdbcType=BIGINT},
+      </if>
+      <if test="departmentId != null" >
+        #{departmentId,jdbcType=BIGINT},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysMsgDepartmentRelation" >
+    update tmn_sys_msg_department_relation
+    <set >
+      <if test="createUserId != null" >
+        createUserId = #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where msgId = #{msgId,jdbcType=BIGINT}
+      and departmentId = #{departmentId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.niiwoo.shield.manage.sys.dao.entity.SysMsgDepartmentRelation" >
+    update tmn_sys_msg_department_relation
+    set createUserId = #{createUserId,jdbcType=BIGINT},
+      createTime = #{createTime,jdbcType=TIMESTAMP}
+    where msgId = #{msgId,jdbcType=BIGINT}
+      and departmentId = #{departmentId,jdbcType=BIGINT}
+  </update>
+</mapper>
